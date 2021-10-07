@@ -27,7 +27,7 @@ int main()
 		default:
 			printf("PARENTS: This is parents process!\n");
 			printf("PARENT: current parent PID = %d\n", getpid());
-			printf("PARENT: PPID = %d\n",getppid);
+			printf("PARENT: PPID = %d\n",getppid());
 			printf("PARENT: Waiting for exit...\n");
 			wait(&exit_status);
 			printf("PARENT: Child code: %d\n",WEXITSTATUS(exit_status));
