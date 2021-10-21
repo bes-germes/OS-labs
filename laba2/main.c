@@ -255,7 +255,9 @@ void charToOct(char* fileName, char* operand, char* buffBegin, char* buffMid, ch
 	}
 	}else{
 	printf("used uncorrect attribute\n");
-	strcpy(str, "0644");
+	strcpy(str, buffBegin);
+        strcat(str, buffMid);
+        strcat(str, buffEnd);
 	}
 	int mode;
 	mode = strtol(str, 0, 8); 
