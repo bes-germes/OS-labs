@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <dirent.h>
+#include <unistd.h>
 
         int flagBeginX = 0, flagBeginW = 0, flagBeginR = 0, flagMidX = 0, flagMidW = 0, flagMidR = 0, flagEndX = 0, flagEndW = 0, flagEndR = 0;
 
@@ -13,7 +14,7 @@ void help()
 
 void notArg()
 {
-	printf("missing operand\nTry 'chmod -h' for more information.\n");
+	printf("Used uncorrect attribute\nTry 'chmod -h' for more information.\n");
 }
 
 void charToOct(char* fileName, char* operand, char* buffBegin, char* buffMid, char* buffEnd, char* fullBuff)
@@ -22,7 +23,7 @@ void charToOct(char* fileName, char* operand, char* buffBegin, char* buffMid, ch
 	int intBegin = 0;
 	int intMid = 0;
 	int intEnd = 0; 
-		
+
 	for(int i = 0; i <= 4; i++)
 	{
 		
@@ -254,10 +255,10 @@ void charToOct(char* fileName, char* operand, char* buffBegin, char* buffMid, ch
 
 	}
 	}else{
-	printf("used uncorrect attribute\n");
+	notArg();
 	strcpy(str, buffBegin);
-        strcat(str, buffMid);
-        strcat(str, buffEnd);
+	strcat(str, buffMid);
+	strcat(str, buffEnd);
 	}
 	int mode;
 	mode = strtol(str, 0, 8); 
@@ -275,9 +276,11 @@ int main(int argc, char* argv[])
 	char buffGrup[5];
 	char buffOthr[5];
  
-	if(argc > 2 && (fp=fopen(argv[2], "rb"))==NULL) {
-		printf("Cannot open file.\n");
-		exit (1);
+	if(argc > 2) {
+		if (access(argv[2], F_OK)) {
+			printf("File doesn't exist\n");
+			exit(0);
+		}
 	}
 	
 	stat(argv[2], &buff);
@@ -307,7 +310,7 @@ int main(int argc, char* argv[])
 	case 3:
 		if(strlen(argv[1]) > 6)
 		{
-			help();
+			notArg();
 			return 0;
 		}
 		charToOct(argv[2], argv[1], buffUser, buffGrup, buffOthr, bufferFull);
