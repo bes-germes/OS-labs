@@ -23,15 +23,26 @@ void charToOct(char* fileName, char* operand, char* buffBegin, char* buffMid, ch
 	int intBegin = 0;
 	int intMid = 0;
 	int intEnd = 0; 
+	
+	int errBeginX = 0;
+	int errMidX = 0;
+	int errEndX = 0;
 
+	int errBeginW = 0;
+	int errMidW = 0;
+	int errEndW = 0;
+	
+	int errBeginR = 0;
+	int errMidR = 0;
+	int errEndR = 0;
+	
 	for(int i = 0; i <= 4; i++)
 	{
 		
 		if(buffBegin[i] == 'x')
 		{
 			intBegin += 1;
-			flagBeginX = 1;
-			 
+			flagBeginX = 1; 				
 		}
 		if(buffMid[i] == 'x' && intMid < 7)
 		{
@@ -74,9 +85,36 @@ void charToOct(char* fileName, char* operand, char* buffBegin, char* buffMid, ch
 			flagEndR = 1;
 			intEnd += 4;
 		}
+		 
 	} 
+	
+	int countX = 0;
+	int countW = 0;
+	int countR = 0;
+		
+	for (int i = 3; operand[i] !='\0'; i++)
+	{
+        	if(operand[i] == 'x' && strlen(operand) < 7)
+                {
+                	countX += 1;
+                }
+                if(operand[i] == 'w' &&  strlen(operand)< 7)
+                {
+                	countW += 1;
+                }
+                if(operand[i] == 'r' && strlen(operand) < 7)
+                {
+                	countR += 1;
+                }
+		
+	}
+	
+        if (countX > 1 || countW > 1 || countR > 1)
+        {
+                notArg();
+                return;
+        }
 
-			
 	char str[10];
 	char buffStrBegin[3];
 	char buffStrMid[3];
@@ -85,175 +123,197 @@ void charToOct(char* fileName, char* operand, char* buffBegin, char* buffMid, ch
 	sprintf(buffMid, "%d", intMid);
 	sprintf(buffEnd, "%d", intEnd);
 	strcpy(str, "0");
-	if(operand[2] == 'a' || operand[2] == 'r'){
-	if(operand[2] == 'a')
+	
+
+	if (operand[3] == 'r' || operand[3] == 'w' || operand[3] == 'x')
 	{
-		if(operand[1] == 'u')
-		{ 	
-			for(int i = 3; operand[i] != '\0'; i++)
-			{
-				if(operand[i] == 'x' && intBegin < 7 && flagBeginX == 0)
-				{
-					intBegin += 1;
-				}
-				if(operand[i] == 'w' && intBegin < 7 && flagBeginW == 0)
-				{
-					intBegin += 2;
-				}
-				if(operand[i] == 'r' && intBegin < 7 && flagBeginR == 0)
-				{
-					intBegin += 4;
-				}	
-		
-			}
-			char begin[3];
-			sprintf(begin, "%d", intBegin);	
-			strcat(str, begin);
-			strcat(str, buffMid);
-			strcat(str, buffEnd);
-		} 
-		if(operand[1] == 'g')
-		{
-                	for(int i = 3; operand[i] != '\0'; i++)
-                	{
-                        	if(operand[i] == 'x' && intMid < 7 && flagMidX == 0)
-                        	{
-                                	intMid += 1;
-                        	}
-                        	if(operand[i] == 'w' && intMid < 7  && flagMidW == 0)
-                        	{
-                                	intMid += 2;
-                        	}
-                        	if(operand[i] == 'r' && intMid < 7 && flagMidR == 0)
-                        	{
-                                	intMid += 4;
-                        	}
-
-			}
-
-                	char mid[3];
-                	sprintf(mid, "%d", intMid);
-                	strcat(str, buffBegin);
-                	strcat(str, mid);
-                	strcat(str, buffEnd);
-	
-		}
-		if(operand[1] == 'o')
-		{	
-	
-                	for(int i = 3; operand[i] != '\0'; i++)
-                	{
-                        	if(operand[i] == 'x' && intEnd < 7 && flagEndX == 0)
-                        	{
-                                	intEnd += 1;
-                        	}
-                        	if(operand[i] == 'w' && intEnd < 7 && flagEndW == 0)
-                        	{
-                                	intEnd += 2;
-                        	}
-                        	if(operand[i] == 'r' && intEnd < 7 && flagEndR == 0)
-                        	{
-                                	intEnd += 4;
-                        	}
-
-                	}
-                	char end[3];
-                	sprintf(end, "%d", intEnd);
-                	strcat(str, buffBegin);
-        	        strcat(str, buffMid);
-                	strcat(str, end);
-
-		}
-	}
-	if(operand[2] == 'r'){
-		if(operand[1] == 'u')
-		{
-			
-                        for(int i = 3; operand[i] != '\0' ; i++)
-                        {
-                                if(operand[i] == 'x' && intBegin > 0 && flagBeginX == 1)
-                                {
-                                        intBegin -= 1;
-                                }
-                                if(operand[i] == 'w' && intBegin > 0 && flagBeginW == 1)
-                                {
-                                        intBegin -= 2;
-                                }
-                                if(operand[i] == 'r' && intBegin > 0 && flagBeginR == 1)
-                                {
-					printf("Prohibited operation, may cause damage to file\nWant to continue?\nYes - y || No - n\n");
-					char answer[1];
-					scanf("%c", &answer);
-					if(answer[0] == 'y'){
-                                        	intBegin -= 4;
+		if(operand[2] == 'a' || operand[2] == 'r'){
+			if(operand[2] == 'a')
+			{		 
+				if(operand[1] == 'u')
+				{ 	
+					for(int i = 3; operand[i] != '\0'; i++)
+					{
+						if(operand[i] == 'x' && intBegin < 7 && flagBeginX == 0)
+						{
+							intBegin += 1;
+							errBeginX += 1 ;
+						}
+						if(operand[i] == 'w' && intBegin < 7 && flagBeginW == 0)
+						{
+							intBegin += 2;
+							errBeginW += 1;
+						}
+						if(operand[i] == 'r' && intBegin < 7 && flagBeginR == 0)
+						{
+							intBegin += 4;
+							errBeginR += 1;
+						}	
+				
 					}
-                                }
 
-                        }
-                        char begin[3];
-                        sprintf(begin, "%d", intBegin);
-                        strcat(str, begin);
-                        strcat(str, buffMid);
-                        strcat(str, buffEnd);
+					char begin[3];
+					sprintf(begin, "%d", intBegin);	
+					strcat(str, begin);
+					strcat(str, buffMid);
+					strcat(str, buffEnd);
+				} 
+				if(operand[1] == 'g')
+				{
+					for(int i = 3; operand[i] != '\0'; i++)
+					{
+						if(operand[i] == 'x' && intMid < 7 && flagMidX == 0)
+						{
+							intMid += 1;
+							errMidX += 1;
+						}
+						if(operand[i] == 'w' && intMid < 7  && flagMidW == 0)
+						{
+							intMid += 2;
+							errMidW += 1;
+						}
+						if(operand[i] == 'r' && intMid < 7 && flagMidR == 0)
+						{
+							intMid += 4;
+							errMidR += 1;
+						}
+
+					}
+
+					char mid[3];
+					sprintf(mid, "%d", intMid);
+					strcat(str, buffBegin);
+					strcat(str, mid);
+					strcat(str, buffEnd);
+			
+				}
+				if(operand[1] == 'o')
+				{	
+			
+					for(int i = 3; operand[i] != '\0'; i++)
+					{
+						if(operand[i] == 'x' && intEnd < 7 && flagEndX == 0)
+						{
+							intEnd += 1;
+							errEndX += 1;
+						}
+						if(operand[i] == 'w' && intEnd < 7 && flagEndW == 0)
+						{
+							intEnd += 2;
+							errEndW += 1;
+						}
+						if(operand[i] == 'r' && intEnd < 7 && flagEndR == 0)
+						{
+							intEnd += 4;
+							errEndR += 1;
+						}
+
+					}
+					
+					char end[3];
+					sprintf(end, "%d", intEnd);
+					strcat(str, buffBegin);
+					strcat(str, buffMid);
+					strcat(str, end);
+
+				}
+			}
+			if(operand[2] == 'r'){
+				if(operand[1] == 'u')
+				{
+					
+					for(int i = 3; operand[i] != '\0' ; i++)
+					{
+						if(operand[i] == 'x' && intBegin > 0 && flagBeginX == 1)
+						{
+							intBegin -= 1;
+							errBeginX += 1;
+						}
+						if(operand[i] == 'w' && intBegin > 0 && flagBeginW == 1)
+						{
+							intBegin -= 2;
+							errBeginW += 1;
+						}
+						if(operand[i] == 'r' && intBegin > 0 && flagBeginR == 1)
+						{				
+							
+							intBegin -= 4;
+							errBeginR += 1;
+						}
+
+					}
+					
+					char begin[3];
+					sprintf(begin, "%d", intBegin);
+					strcat(str, begin);
+					strcat(str, buffMid);
+					strcat(str, buffEnd);
 
 
+				}
+				if(operand[1] == 'g')
+				{
+					 
+					for(int i = 3; operand[i] != '\0'; i++)
+					{
+						if(operand[i] == 'x' && intMid > 0 && flagMidX == 1)
+						{
+							intMid -= 1;
+							errMidX += 1;
+						}
+						if(operand[i] == 'w' && intMid > 0  && flagMidW == 1)
+						{
+							intMid -= 2;
+							errMidW += 1;
+						}
+						if(operand[i] == 'r' && intMid > 0 && flagMidR == 1)
+						{
+							intMid -= 4;
+							errMidR += 1;
+						}
+
+					}
+								
+					char mid[3];
+					sprintf(mid, "%d", intMid);
+					strcat(str, buffBegin);
+					strcat(str, mid);
+					strcat(str, buffEnd);
+
+				}
+				if(operand[1] == 'o')
+				{
+
+					for(int i = 3; operand[i] != '\0'; i++)
+					{
+						if(operand[i] == 'x' && intEnd > 0 && flagEndX == 1)
+						{
+							intEnd -= 1;
+							errEndX += 1;
+						}
+						if(operand[i] == 'w' && intEnd > 0 && flagEndW == 1)
+						{
+							intEnd -= 2;
+							errEndW += 1;
+						}
+						if(operand[i] == 'r' && intEnd > 0 && flagEndR == 1)
+						{
+							intEnd -= 4;
+							errEndR += 1;
+						}
+
+					}
+						
+					char end[3];
+					sprintf(end, "%d", intEnd);
+					strcat(str, buffBegin);
+					strcat(str, buffMid);
+					strcat(str, end);
+
+				}
+
+			}
 		}
-		if(operand[1] == 'g')
-                {
-			 
-                        for(int i = 3; operand[i] != '\0'; i++)
-                        {
-                                if(operand[i] == 'x' && intMid > 0 && flagMidX == 1)
-                                {
-                                        intMid -= 1;
-                                }
-                                if(operand[i] == 'w' && intMid > 0  && flagMidW == 1)
-                                {
-                                        intMid -= 2;
-                                }
-                                if(operand[i] == 'r' && intMid > 0 && flagMidR == 1)
-                                {
-                                        intMid -= 4;
-                                }
-
-                        }
-                        
-                        char mid[3];
-                        sprintf(mid, "%d", intMid);
-                        strcat(str, buffBegin);
-                        strcat(str, mid);
-                        strcat(str, buffEnd);
-
-                }
-                if(operand[1] == 'o')
-                {
-
-                        for(int i = 3; operand[i] != '\0'; i++)
-                        {
-                                if(operand[i] == 'x' && intEnd > 0 && flagEndX == 1)
-                                {
-                                        intEnd -= 1;
-                                }
-                                if(operand[i] == 'w' && intEnd > 0 && flagEndW == 1)
-                                {
-                                        intEnd -= 2;
-                                }
-                                if(operand[i] == 'r' && intEnd > 0 && flagEndR == 1)
-                                {
-                                        intEnd -= 4;
-                                }
-
-                        }
-                        
-                        char end[3];
-                        sprintf(end, "%d", intEnd);
-                        strcat(str, buffBegin);
-                        strcat(str, buffMid);
-                        strcat(str, end);
-
-                }
-
-	}
 	}else{
 	notArg();
 	strcpy(str, buffBegin);
